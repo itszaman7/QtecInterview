@@ -1,0 +1,64 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-primary: #4640DE;
+  --color-primary-dark: #3a35c4;
+  --color-accent-blue: #26A4FF;
+}
+
+/* Clash Display — local font files */
+@font-face {
+  font-family: 'Clash Display';
+  src: url('/fonts/ClashDisplay-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Clash Display';
+  src: url('/fonts/ClashDisplay-Medium.woff2') format('woff2'),
+       url('/fonts/ClashDisplay-Medium.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Clash Display';
+  src: url('/fonts/ClashDisplay-Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+body {
+  background: #ffffff;
+  color: #25324B;
+  font-family: 'Epilogue', system-ui, -apple-system, sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 160%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Heading styles — Clash Display */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Clash Display', 'Epilogue', system-ui, sans-serif;
+  font-weight: 600;
+  line-height: 110%;
+}
+
+/* Company logos strip styling */
+.company-logo {
+  color: #b0b8c8;
+  font-family: 'Epilogue', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  opacity: 0.5;
+  transition: opacity 0.3s;
+}
+.company-logo:hover {
+  opacity: 0.8;
+}
