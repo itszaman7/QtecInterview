@@ -73,8 +73,9 @@ export default async function Home() {
     const cookieStore = await cookies();
     const userToken = cookieStore.get('user_token')?.value;
 
-    // Next.js Server Component running in Node can reach localhost:5000
-    const res = await fetch('http://localhost:5000/api/jobs', { 
+    // Next.js Server Component running in Node can reach the backend using env variable or localhost fallback
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+    const res = await fetch(`${apiUrl}/api/jobs`, { 
       cache: 'no-store',
       headers: userToken ? {
         'Cookie': `user_token=${userToken}`
