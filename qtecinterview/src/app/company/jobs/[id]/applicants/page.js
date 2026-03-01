@@ -18,7 +18,7 @@ export default function JobApplicantsPage() {
 
   const fetchJobDetails = async () => {
     try {
-      const json = await companyJobsAPI.getOwnJob(id);
+      const json = await companyJobsAPI.get(id);
       if (json.success) {
         setJob(json.data);
       } else {
