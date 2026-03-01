@@ -4,6 +4,7 @@ import { useEffect, useState, createContext, useContext } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { companyAuthAPI } from '../../lib/api';
+import Swal from 'sweetalert2';
 
 const CompanyContext = createContext(null);
 export const useCompany = () => useContext(CompanyContext);
@@ -79,6 +80,40 @@ export default function CompanyLayout({ children }) {
           <nav style={{ padding: '0 16px', flex: 1 }}>
             {navLinks.map((link) => {
               const isActive = pathname === link.href;
+              const isPostJob = link.href === '/company/jobs/new';
+              
+              if (isPostJob && company && !company.is_verified) {
+                return (
+                  <button 
+                    key={link.href} 
+                    className={`nav-link`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      Swal.fire({
+                        icon: 'warning',
+                        title: 'Verification Pending',
+                        text: 'Your company profile must be approved by an administrator before you can post new jobs.',
+                        confirmButtonColor: '#4f46e5'
+                      });
+                    }}
+                    style={{ 
+                      width: '100%', 
+                      textAlign: 'left', 
+                      border: 'none', 
+                      background: 'transparent', 
+                      cursor: 'not-allowed', 
+                      fontFamily: 'inherit',
+                      opacity: 0.5,
+                      filter: 'grayscale(100%)'
+                    }}
+                    title="Awaiting Admin Approval"
+                  >
+                    <span className="nav-icon">{link.icon}</span>
+                    {link.label} (Locked)
+                  </button>
+                );
+              }
+
               return (
                 <Link key={link.href} href={link.href} className={`nav-link ${isActive ? 'active' : ''}`}>
                   <span className="nav-icon">{link.icon}</span>

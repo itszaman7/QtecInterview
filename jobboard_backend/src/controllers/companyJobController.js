@@ -56,6 +56,13 @@ exports.getOwnJob = async (req, res, next) => {
 /** POST /api/company/jobs — create job */
 exports.createJob = async (req, res, next) => {
   try {
+    if (!req.company.is_verified) {
+      return res.status(403).json({ 
+        success: false, 
+        error: 'Your company must be verified by an admin before you can post jobs.' 
+      });
+    }
+
     const job = await Job.create({
       ...req.body,
       company_id: req.company.id,
