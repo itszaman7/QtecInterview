@@ -5,6 +5,9 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { userAuthAPI } from '../../lib/api';
 
+import AuthLayout from '../../components/layout/AuthLayout';
+import RoleToggle from '../../components/ui/RoleToggle';
+
 export default function LoginPage() {
   const router = useRouter();
   const [form, setForm] = useState({ email: '', password: '' });
@@ -25,49 +28,59 @@ export default function LoginPage() {
     } finally { setLoading(false); }
   };
 
-  const inputStyle = { width: '100%', padding: '12px 16px', border: '1px solid #D6DDEB', borderRadius: '8px', fontSize: '14px', outline: 'none', boxSizing: 'border-box', fontFamily: "'Epilogue', sans-serif" };
+  const inputStyle = { width: '100%', padding: '14px 16px', border: '1px solid #D6DDEB', borderRadius: '12px', fontSize: '14px', outline: 'none', boxSizing: 'border-box', fontFamily: "'Epilogue', sans-serif" };
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg, #4640DE 0%, #26A4FF 100%)', fontFamily: "'Epilogue', sans-serif", padding: '40px 20px' }}>
-      <div style={{ background: '#fff', borderRadius: '16px', padding: '40px', width: '100%', maxWidth: '440px', boxShadow: '0 25px 50px rgba(0,0,0,0.15)' }}>
-        <div style={{ textAlign: 'center', marginBottom: '28px' }}>
-          <h1 style={{ fontSize: '24px', fontWeight: '700', color: '#25324B', margin: '0 0 8px', fontFamily: "'Clash Display', sans-serif" }}>Welcome Back</h1>
-          <p style={{ color: '#7C8493', fontSize: '14px', margin: 0 }}>Log in to access your applications</p>
+    <AuthLayout>
+      <div style={{ maxWidth: '420px', margin: '0 auto', width: '100%' }}>
+        <RoleToggle />
+        
+        <div style={{ marginBottom: '32px' }}>
+          <h1 style={{ fontSize: '32px', fontWeight: '700', color: '#25324B', margin: '0 0 8px', fontFamily: "'Clash Display', sans-serif" }}>Welcome Back</h1>
+          <p style={{ color: '#7C8493', fontSize: '15px', margin: 0 }}>Enter your credentials to access your account</p>
         </div>
 
         {error && (
-          <div style={{ background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: '8px', padding: '12px 16px', marginBottom: '20px' }}>
+          <div style={{ background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: '12px', padding: '12px 16px', marginBottom: '24px' }}>
             <p style={{ color: '#DC2626', fontSize: '13px', margin: 0 }}>{error}</p>
           </div>
         )}
 
         <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: '16px' }}>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#25324B', marginBottom: '6px' }}>Email Address</label>
-            <input name="email" type="email" value={form.email} onChange={handleChange} required style={inputStyle} placeholder="john@example.com" />
+          <div style={{ marginBottom: '20px' }}>
+            <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', color: '#25324B', marginBottom: '8px' }}>Email*</label>
+            <input name="email" type="email" value={form.email} onChange={handleChange} required style={inputStyle} placeholder="Enter your email" />
           </div>
 
-          <div style={{ marginBottom: '24px' }}>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#25324B', marginBottom: '6px' }}>Password</label>
-            <input name="password" type="password" value={form.password} onChange={handleChange} required style={inputStyle} placeholder="Password" />
+          <div style={{ marginBottom: '28px' }}>
+            <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', color: '#25324B', marginBottom: '8px' }}>Password*</label>
+            <input name="password" type="password" value={form.password} onChange={handleChange} required style={inputStyle} placeholder="Enter your password" />
           </div>
 
-          <button type="submit" disabled={loading} style={{ width: '100%', padding: '14px', background: loading ? '#7C7AED' : '#4640DE', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '16px', fontWeight: '600', cursor: loading ? 'not-allowed' : 'pointer' }}>
+          <button type="submit" disabled={loading} style={{ width: '100%', padding: '16px', background: loading ? '#6EE7B7' : '#56E0B1', color: '#fff', border: 'none', borderRadius: '12px', fontSize: '16px', fontWeight: '700', cursor: loading ? 'not-allowed' : 'pointer', transition: 'background 0.2s', boxShadow: '0 4px 6px rgba(86, 224, 177, 0.2)' }}>
             {loading ? 'Logging In...' : 'Log In'}
           </button>
         </form>
 
-        <p style={{ textAlign: 'center', marginTop: '20px', fontSize: '14px', color: '#7C8493' }}>
-          Don't have an account?{' '}
-          <Link href="/register" style={{ color: '#4640DE', fontWeight: '600', textDecoration: 'none' }}>Sign Up</Link>
-        </p>
-        
-        <div style={{ marginTop: '24px', textAlign: 'center', borderTop: '1px solid #E9EBEE', paddingTop: '16px' }}>
-            <p style={{ fontSize: '13px', color: '#7C8493', margin: 0 }}>
-              Hiring? <Link href="/company/login" style={{ color: '#4640DE', fontWeight: '600', textDecoration: 'none' }}>Company Login</Link>
-            </p>
+        <div style={{ display: 'flex', alignItems: 'center', margin: '32px 0' }}>
+          <div style={{ flex: 1, height: '1px', background: '#E9EBEE' }}></div>
+          <span style={{ padding: '0 16px', color: '#7C8493', fontSize: '14px', fontWeight: '500' }}>Or continue with</span>
+          <div style={{ flex: 1, height: '1px', background: '#E9EBEE' }}></div>
         </div>
+
+        <div style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
+          {['G', 'f', 'A'].map((provider) => (
+            <button key={provider} type="button" style={{ width: '48px', height: '48px', borderRadius: '50%', border: '1px solid #E9EBEE', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: '18px', fontWeight: 'bold', color: '#25324B', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
+              {provider}
+            </button>
+          ))}
+        </div>
+
+        <p style={{ textAlign: 'center', marginTop: '32px', fontSize: '15px', color: '#515B6F' }}>
+          Don't have an account?{' '}
+          <Link href="/register" style={{ color: '#56E0B1', fontWeight: '700', textDecoration: 'none' }}>Sign Up</Link>
+        </p>
       </div>
-    </div>
+    </AuthLayout>
   );
 }

@@ -115,35 +115,107 @@ export default function CompanyDashboard() {
 
   return (
     <div>
-      <div style={{ marginBottom: '32px' }}>
-        <h1 style={{ fontSize: '28px', fontWeight: '700', color: '#25324B', margin: '0 0 8px', fontFamily: "'Clash Display', sans-serif" }}>
-          Welcome, {company?.name}
+      {/* Hero Banner */}
+      <div className="hero-banner" style={{ marginBottom: '40px', background: 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)' }}>
+        <h1 style={{
+          fontSize: '32px',
+          fontWeight: '700',
+          margin: '0 0 12px',
+          fontFamily: "'Clash Display', sans-serif",
+          position: 'relative',
+          zIndex: 10
+        }}>
+          Manage Your Talent Pipeline
         </h1>
-        <p style={{ color: '#7C8493', fontSize: '14px', margin: 0 }}>
-          {company?.is_verified
-            ? '✅ Your company is verified — you can post and manage jobs.'
-            : '⏳ Your company is pending admin verification.'}
+        <p style={{ fontSize: '16px', opacity: 0.9, margin: '0 0 24px', maxWidth: '500px', position: 'relative', zIndex: 10 }}>
+          Welcome back to {company?.name}. Track applications, post new opportunities, and find your next great hire.
         </p>
+        <Link href="/company/jobs/new" style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: '8px',
+          background: '#ffffff',
+          color: '#3b82f6',
+          padding: '12px 24px',
+          borderRadius: '30px',
+          textDecoration: 'none',
+          fontWeight: '600',
+          fontSize: '15px',
+          position: 'relative',
+          zIndex: 10,
+          boxShadow: '0 4px 10px rgba(0,0,0,0.1)'
+        }}>
+          Post New Job <span style={{ fontSize: '18px' }}>→</span>
+        </Link>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '20px', marginBottom: '40px' }}>
-        {cards.map((card) => (
-          <div key={card.label} style={{ background: '#fff', borderRadius: '12px', padding: '24px', border: '1px solid #E9EBEE' }}>
-            <p style={{ fontSize: '13px', color: '#7C8493', margin: '0 0 8px', fontWeight: '500' }}>{card.label}</p>
-            <p style={{ fontSize: '36px', fontWeight: '700', color: card.color, margin: 0, fontFamily: "'Clash Display', sans-serif" }}>
-              {loading ? '—' : card.value}
-            </p>
+      <div style={{ display: 'flex', gap: '32px' }}>
+        {/* Main Content Area */}
+        <div style={{ flex: 2 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
+            <h2 style={{ fontSize: '20px', fontWeight: '700', color: '#0f172a', margin: 0 }}>Company Statistics</h2>
+            <span style={{ fontSize: '24px', color: '#cbd5e1', cursor: 'pointer' }}>⋮</span>
           </div>
-        ))}
-      </div>
 
-      <div style={{ display: 'flex', gap: '12px' }}>
-        <Link href="/company/jobs/new" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '12px 24px', background: '#4640DE', color: '#fff', borderRadius: '8px', textDecoration: 'none', fontSize: '14px', fontWeight: '600' }}>
-          ➕ Post a Job
-        </Link>
-        <Link href="/company/jobs" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '12px 24px', background: '#fff', color: '#4640DE', border: '1px solid #4640DE', borderRadius: '8px', textDecoration: 'none', fontSize: '14px', fontWeight: '600' }}>
-          💼 View My Jobs
-        </Link>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', marginBottom: '40px' }}>
+            {cards.map((card, index) => (
+              <div key={card.label} className="dashboard-card" style={{ padding: '20px' }}>
+                <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: card.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', color: card.color, fontSize: '18px', marginBottom: '16px' }}>
+                  {index === 0 ? '💼' : index === 1 ? '⭐' : '📄'}
+                </div>
+                <p style={{ fontSize: '13px', color: '#64748b', margin: '0 0 4px', fontWeight: '600' }}>{card.label}</p>
+                <div style={{ display: 'flex', alignItems: 'flex-end', gap: '8px' }}>
+                  <p style={{ fontSize: '28px', fontWeight: '700', color: '#0f172a', margin: 0, lineHeight: 1 }}>
+                    {loading ? '—' : card.value}
+                  </p>
+                  <span style={{ fontSize: '12px', color: '#10b981', fontWeight: '600', marginBottom: '4px' }}>↑ 12%</span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="dashboard-card" style={{ padding: '32px', textAlign: 'center', background: '#f8fafc', borderStyle: 'dashed' }}>
+             <div style={{ width: '64px', height: '64px', background: '#e0e7ff', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', fontSize: '24px', color: '#4f46e5' }}>
+               📈
+             </div>
+             <h3 style={{ fontSize: '18px', fontWeight: '700', color: '#0f172a', margin: '0 0 8px' }}>Applicant Analytics</h3>
+             <p style={{ fontSize: '14px', color: '#64748b', margin: '0 0 24px', maxWidth: '400px', marginInline: 'auto' }}>
+               Track your hiring pipeline performance and application trends over time.
+             </p>
+             <button style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: '10px 20px', borderRadius: '8px', fontSize: '14px', fontWeight: '600', color: '#334155', cursor: 'pointer' }}>
+               View full report
+             </button>
+          </div>
+        </div>
+
+        {/* Right Sidebar */}
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '32px' }}>
+          <div className="dashboard-card">
+             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>
+                <h3 style={{ fontSize: '16px', fontWeight: '700', color: '#0f172a', margin: 0 }}>Hiring Team</h3>
+                <div style={{ width: '28px', height: '28px', borderRadius: '8px', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b', cursor: 'pointer' }}>+</div>
+             </div>
+             
+             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                {[1, 2, 3].map(i => (
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                     <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: i===1 ? '#e2e8f0' : i===2 ? '#fef3c7' : '#e0e7ff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px', border: '2px solid #fff', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
+                       {i===1 ? '👨‍💼' : i===2 ? '👩‍💻' : '🧑‍🎨'}
+                     </div>
+                     <div style={{ flex: 1 }}>
+                       <p style={{ margin: '0 0 2px', fontSize: '14px', fontWeight: '600', color: '#1e293b' }}>
+                         {i===1 ? company?.email || 'Sarah Jenkins' : i===2 ? 'Michael Chen' : 'Jessica Wong'}
+                       </p>
+                       <p style={{ margin: 0, fontSize: '12px', color: '#64748b' }}>
+                         {i===1 ? 'HR Director' : i===2 ? 'Tech Lead' : 'Recruiter'}
+                       </p>
+                     </div>
+                     <button style={{ background: 'transparent', border: 'none', color: '#3b82f6', fontSize: '12px', fontWeight: '600', cursor: 'pointer' }}>Message</button>
+                  </div>
+                ))}
+             </div>
+          </div>
+        </div>
       </div>
     </div>
   );

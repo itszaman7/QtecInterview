@@ -82,6 +82,9 @@ export default function CompanyJobsPage() {
                     {job.deadline ? new Date(job.deadline).toLocaleDateString() : '—'}
                   </td>
                   <td style={{ padding: '14px 20px', textAlign: 'right' }}>
+                    <Link href={`/company/jobs/${job.id}/applicants`} style={{ color: '#0EA5E9', textDecoration: 'none', fontWeight: '600', marginRight: '16px', fontSize: '13px' }}>
+                      Applicants ({job.applicant_count || 0})
+                    </Link>
                     <Link href={`/company/jobs/${job.id}`} style={{ color: '#4640DE', textDecoration: 'none', fontWeight: '500', marginRight: '16px', fontSize: '13px' }}>View</Link>
                     <button onClick={() => handleDelete(job.id, job.title)} disabled={deleting === job.id} style={{ background: 'none', border: 'none', color: '#DC2626', cursor: 'pointer', fontWeight: '500', fontSize: '13px' }}>
                       {deleting === job.id ? '...' : 'Delete'}

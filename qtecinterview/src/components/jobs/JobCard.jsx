@@ -10,7 +10,8 @@ const JobCard = ({
     location,
     type = 'Full Time',
     description,
-    tags = []
+    tags = [],
+    isApplied = false
 }) => {
     // Map tag names to badge variants
     const tagVariantMap = {
@@ -33,7 +34,14 @@ const JobCard = ({
                         </div>
                     )}
                 </div>
-                <Badge variant="outline">{type}</Badge>
+                <div className="flex items-center gap-3">
+                    <Badge variant="outline">{type}</Badge>
+                    {isApplied && (
+                        <span className="bg-emerald-100 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                            Applied ✓
+                        </span>
+                    )}
+                </div>
             </div>
 
             {/* Job title */}

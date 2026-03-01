@@ -64,12 +64,22 @@ const ArrowRight = () => (
   </svg>
 );
 
+import { cookies } from "next/headers";
+
 export default async function Home() {
   // Fetch actual data from backend API
   let jobs = [];
   try {
+    const cookieStore = await cookies();
+    const userToken = cookieStore.get('user_token')?.value;
+
     // Next.js Server Component running in Node can reach localhost:5000
-    const res = await fetch('http://localhost:5000/api/jobs', { cache: 'no-store' });
+    const res = await fetch('http://localhost:5000/api/jobs', { 
+      cache: 'no-store',
+      headers: userToken ? {
+        'Cookie': `user_token=${userToken}`
+      } : {}
+    });
     const json = await res.json();
     if (json.success) jobs = json.data;
   } catch (error) {
@@ -174,6 +184,7 @@ export default async function Home() {
                 location={job.location}
                 description={job.description}
                 tags={job.tags}
+                isApplied={job.is_applied}
               />
             ))}
           </div>

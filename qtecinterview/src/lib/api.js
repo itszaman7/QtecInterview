@@ -52,7 +52,9 @@ export const jobsAPI = {
 
 // Applications
 export const applicationsAPI = {
+  list: () => api('/applications'),
   create: (job_id) => api('/applications', { method: 'POST', body: { job_id } }),
+  delete: (id) => api(`/applications/${id}`, { method: 'DELETE' }),
 };
 
 // User Auth (Applicant)
@@ -80,7 +82,7 @@ export const companyJobsAPI = {
   create: (data) => api('/company/jobs', { method: 'POST', body: data }),
   update: (id, data) => api(`/company/jobs/${id}`, { method: 'PUT', body: data }),
   delete: (id) => api(`/company/jobs/${id}`, { method: 'DELETE' }),
-  updateApplicationStatus: (id, status) => api(`/company/jobs/applications/${id}/status`, { method: 'PUT', body: { status } }),
+  updateApplicationStatus: (id, data) => api(`/company/jobs/applications/${id}/status`, { method: 'PUT', body: data }),
 };
 
 // Admin Companies

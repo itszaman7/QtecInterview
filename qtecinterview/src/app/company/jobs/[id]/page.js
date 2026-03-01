@@ -10,11 +10,12 @@ export default function CompanyJobDetailPage() {
   const router = useRouter();
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     companyJobsAPI.get(id)
       .then((res) => setJob(res.data))
-      .catch(() => router.push('/company/jobs'))
+      .catch((err) => setError(err.data?.error || 'Job not found'))
       .finally(() => setLoading(false));
   }, [id, router]);
 
@@ -31,8 +32,14 @@ export default function CompanyJobDetailPage() {
     }
   };
 
-  if (loading) return <p style={{ color: '#7C8493' }}>Loading...</p>;
-  if (!job) return <p style={{ color: '#DC2626' }}>Job not found.</p>;
+  if (loading) return <p style={{ color: '#7C8493', padding: '40px', textAlign: 'center' }}>Loading...</p>;
+  if (error) return (
+    <div style={{ padding: '40px', textAlign: 'center' }}>
+      <p style={{ color: '#ef4444', marginBottom: '16px' }}>{error}</p>
+      <Link href="/company/jobs" style={{ color: '#4640DE', fontWeight: '600' }}>← Return to Jobs</Link>
+    </div>
+  );
+  if (!job) return null;
 
   const apps = job.applications || [];
   const isExpired = job.deadline && new Date(job.deadline) < new Date();

@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
 import JobCard from '../../components/jobs/JobCard';
+import { jobsAPI } from '../../lib/api';
 
 function JobsSearchContent() {
   const router = useRouter();
@@ -30,14 +31,10 @@ function JobsSearchContent() {
   const fetchJobs = async () => {
     setLoading(true);
     try {
-      const query = new URLSearchParams();
-      if (filters.title) query.append('title', filters.title);
-      if (filters.category) query.append('category', filters.category);
-      if (filters.type) query.append('type', filters.type);
-      if (filters.location) query.append('location', filters.location);
-
-      const res = await fetch(`/api/jobs?${query.toString()}`);
-      const json = await res.json();
+      const activeFilters = Object.fromEntries(
+        Object.entries(filters).filter(([_, v]) => v !== '')
+      );
+      const json = await jobsAPI.list(activeFilters);
       if (json.success) {
         setJobs(json.data);
       }
@@ -172,6 +169,7 @@ function JobsSearchContent() {
                     location={job.location}
                     description={job.description}
                     tags={[job.type, ...(job.tags || [])].filter(Boolean)}
+                    isApplied={job.is_applied}
                   />
                 ))}
               </div>

@@ -49,20 +49,6 @@ export default function AdminJobsPage() {
         }}>
           Job Listings
         </h1>
-        <Link href="/admin/jobs/new" style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: '6px',
-          padding: '10px 20px',
-          background: '#4640DE',
-          color: '#fff',
-          borderRadius: '8px',
-          textDecoration: 'none',
-          fontSize: '14px',
-          fontWeight: '600',
-        }}>
-          + New Job
-        </Link>
       </div>
 
       {loading ? (
@@ -75,8 +61,8 @@ export default function AdminJobsPage() {
           borderRadius: '12px',
           border: '1px solid #E9EBEE',
         }}>
-          <p style={{ fontSize: '18px', color: '#7C8493', marginBottom: '16px' }}>No jobs yet</p>
-          <Link href="/admin/jobs/new" style={{ color: '#4640DE', fontWeight: '600' }}>Create your first job →</Link>
+          <p style={{ fontSize: '18px', color: '#7C8493', marginBottom: '8px' }}>No jobs yet</p>
+          <p style={{ fontSize: '14px', color: '#4640DE', fontWeight: '600', margin: 0 }}>Waiting for companies to post jobs</p>
         </div>
       ) : (
         <div style={{
