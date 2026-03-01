@@ -31,7 +31,7 @@ const registerCompanySchema = z.object({
   password: z.string().min(6, 'Password must be at least 6 characters'),
   logo_url: z.string().optional().nullable(),
   description: z.string().optional(),
-  website: z.string().url().optional().nullable(),
+  website: z.string().optional().nullable(),
   location: z.string().optional(),
 });
 
@@ -63,7 +63,7 @@ const companyUpdateJobSchema = z.object({
 const updateCompanyProfileSchema = z.object({
   logo_url: z.string().optional().nullable(),
   description: z.string().optional(),
-  website: z.string().url().optional().nullable(),
+  website: z.string().optional().nullable(),
   location: z.string().optional(),
 });
 
