@@ -1,4 +1,4 @@
-const { Op } = require('sequelize');
+const { Op, Sequelize } = require('sequelize');
 const Job = require('../models/Job');
 const Application = require('../models/Application');
 
@@ -13,24 +13,39 @@ exports.getAllJobs = async (req, res, next) => {
     const { title, category, location, type } = req.query;
     const where = {};
 
-    // Only active jobs (or let's just show all for now, maybe add deadline check later)
-    if (title) where.title = { [Op.like]: `%${title}%` };
-    if (category) where.category = { [Op.like]: `%${category}%` };
-    if (location) where.location = { [Op.like]: `%${location}%` };
-    if (type) where.type = { [Op.like]: `%${type}%` };
+    // Use LOWER() for case-insensitive search in TiDB (utf8mb4_bin collation)
+    if (title) where.title = Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('Job.title')), 'LIKE', `%${title.toLowerCase()}%`);
+    if (category) where.category = Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('Job.category')), 'LIKE', `%${category.toLowerCase()}%`);
+    if (location) where.location = Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('Job.location')), 'LIKE', `%${location.toLowerCase()}%`);
+    if (type) where.type = Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('Job.type')), 'LIKE', `%${type.toLowerCase()}%`);
 
     const jobs = await Job.findAll({ 
       where, 
       order: [['created_at', 'DESC']],
       include: [
-        { model: Company, as: 'companyProfile', attributes: ['logo_url', 'description', 'website'] }
+        { model: Company, as: 'companyProfile', attributes: ['name', 'logo_url', 'description', 'website'] }
       ]
     });
+
+    let data = jobs.map(j => j.toJSON());
+
+    // If user is logged in, check which jobs they applied to
+    if (req.user) {
+      const applications = await Application.findAll({
+        where: { user_id: req.user.id },
+        attributes: ['job_id']
+      });
+      const appliedJobIds = new Set(applications.map(a => a.job_id));
+      data = data.map(job => ({
+        ...job,
+        is_applied: appliedJobIds.has(job.id)
+      }));
+    }
 
     res.json({
       success: true,
       count: jobs.length,
-      data: jobs,
+      data: data,
     });
   } catch (error) {
     next(error);
@@ -45,8 +60,7 @@ exports.getJobById = async (req, res, next) => {
   try {
     const job = await Job.findByPk(req.params.id, {
       include: [
-        { model: Application, as: 'applications' },
-        { model: Company, as: 'companyProfile', attributes: ['logo_url', 'description', 'website'] }
+        { model: Company, as: 'companyProfile', attributes: ['name', 'logo_url', 'description', 'website'] }
       ],
     });
 
@@ -54,7 +68,33 @@ exports.getJobById = async (req, res, next) => {
       return res.status(404).json({ success: false, error: 'Job not found' });
     }
 
-    res.json({ success: true, data: job });
+    const jobData = job.toJSON();
+
+    // Check if applied
+    if (req.user) {
+      const application = await Application.findOne({
+        where: { job_id: job.id, user_id: req.user.id }
+      });
+      jobData.is_applied = !!application;
+    }
+
+    // Suggested jobs (same category or similar tags)
+    const suggestedJobs = await Job.findAll({
+      where: {
+        category: job.category,
+        id: { [Op.ne]: job.id }
+      },
+      limit: 6,
+      include: [
+        { model: Company, as: 'companyProfile', attributes: ['name', 'logo_url'] }
+      ]
+    });
+
+    res.json({ 
+      success: true, 
+      data: jobData,
+      suggested: suggestedJobs
+    });
   } catch (error) {
     next(error);
   }

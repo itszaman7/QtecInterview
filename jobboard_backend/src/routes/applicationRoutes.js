@@ -7,5 +7,7 @@ const { createApplicationSchema } = require('../middleware/schemas');
 
 // Requires User Auth to apply
 router.post('/', userAuth, validate(createApplicationSchema), applicationController.createApplication);
+router.get('/', userAuth, applicationController.getMyApplications);
+router.delete('/:id', userAuth, applicationController.cancelApplication);
 
 module.exports = router;

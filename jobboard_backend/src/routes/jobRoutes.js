@@ -5,9 +5,11 @@ const auth = require('../middleware/auth');
 const validate = require('../middleware/validate');
 const { createJobSchema } = require('../middleware/schemas');
 
+const { maybeUserAuth } = require('../middleware/maybeUserAuth');
+
 // Public
-router.get('/', jobController.getAllJobs);
-router.get('/:id', jobController.getJobById);
+router.get('/', maybeUserAuth, jobController.getAllJobs);
+router.get('/:id', maybeUserAuth, jobController.getJobById);
 
 // Protected (admin only)
 router.post('/', auth, validate(createJobSchema), jobController.createJob);

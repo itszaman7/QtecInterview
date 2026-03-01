@@ -78,6 +78,7 @@ exports.updateProfile = async (req, res, next) => {
     }
 
     await user.update({
+      name: req.body.name || user.name,
       avatar_url: req.body.avatar_url || user.avatar_url,
       cv_url: req.body.cv_url || user.cv_url,
       is_profile_complete: true,

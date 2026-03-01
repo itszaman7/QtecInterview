@@ -1,5 +1,6 @@
 const Job = require('../models/Job');
 const Application = require('../models/Application');
+const User = require('../models/User');
 
 /** GET /api/company/jobs — list own jobs */
 exports.listOwnJobs = async (req, res, next) => {
@@ -32,14 +33,14 @@ exports.getOwnJob = async (req, res, next) => {
           as: 'applications',
           include: [
             {
-              model: require('../models/User'),
+              model: User,
               as: 'user',
               attributes: ['id', 'name', 'email', 'avatar_url', 'cv_url']
             }
           ]
         }
       ],
-      order: [[{ model: Application, as: 'applications' }, 'createdAt', 'DESC']],
+      order: [[{ model: Application, as: 'applications' }, 'created_at', 'DESC']],
     });
 
     if (!job) {
@@ -108,7 +109,7 @@ exports.deleteJob = async (req, res, next) => {
 /** PUT /api/company/applications/:id/status — Update applicant status */
 exports.updateApplicationStatus = async (req, res, next) => {
   try {
-    const { status } = req.body;
+    const { status, interview_date, interview_link, interview_notes } = req.body;
     
     // We must find the application and verify it belongs to this company
     const application = await Application.findOne({
@@ -119,7 +120,12 @@ exports.updateApplicationStatus = async (req, res, next) => {
       return res.status(404).json({ success: false, error: 'Application not found or unauthorized' });
     }
 
-    await application.update({ status });
+    await application.update({ 
+      status, 
+      interview_date: interview_date || application.interview_date, 
+      interview_link: interview_link || application.interview_link, 
+      interview_notes: interview_notes || application.interview_notes 
+    });
     res.json({ success: true, data: application });
   } catch (error) {
     next(error);

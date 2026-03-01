@@ -24,8 +24,20 @@ const Application = sequelize.define('Application', {
     },
   },
   status: { // Added status field
-    type: DataTypes.ENUM('pending', 'approved', 'rejected'),
+    type: DataTypes.ENUM('pending', 'approved', 'rejected', 'interviewing'),
     defaultValue: 'pending',
+  },
+  interview_date: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
+  interview_link: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  interview_notes: {
+    type: DataTypes.TEXT,
+    allowNull: true,
   },
   company_id: {
     type: DataTypes.INTEGER,
@@ -49,7 +61,7 @@ const Application = sequelize.define('Application', {
 // Associations
 // Existing Job-Application associations (modified to match the instruction's style)
 Application.belongsTo(Job, { foreignKey: 'job_id', as: 'job' });
-Job.hasMany(Application, { foreignKey: 'job_id' });
+Job.hasMany(Application, { foreignKey: 'job_id', as: 'applications' });
 
 // New User-Application associations
 Application.belongsTo(User, { foreignKey: 'user_id', as: 'user' });

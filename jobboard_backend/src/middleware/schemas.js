@@ -69,7 +69,10 @@ const updateCompanyProfileSchema = z.object({
 
 /** PUT /api/company/applications/:id/status */
 const updateApplicationStatusSchema = z.object({
-  status: z.enum(['pending', 'approved', 'rejected']),
+  status: z.enum(['pending', 'approved', 'rejected', 'interviewing']),
+  interview_date: z.string().optional(),
+  interview_link: z.string().optional(),
+  interview_notes: z.string().optional(),
 });
 
 /** POST /api/users/register */
@@ -81,6 +84,7 @@ const registerUserSchema = z.object({
 
 /** PUT /api/users/profile */
 const updateUserProfileSchema = z.object({
+  name: z.string().min(1, 'Name is required').optional(),
   avatar_url: z.string().optional().nullable(),
   cv_url: z.string().optional().nullable(),
 });
