@@ -11,7 +11,7 @@ Built for performance, SEO, and developer experience.
 * **Framework:** [Next.js 16](https://nextjs.org/) (App Router, Server/Client components)
 * **Library:** [React 19](https://react.dev/)
 * **Styling:** [Tailwind CSS 4](https://tailwindcss.com/)
-* **Animations:** [Framer Motion](https://www.framer.com/motion/) & [GSAP](https://gsap.com/) for fluid, dynamic interactions
+* **Animations:** Tailwind CSS transitions and custom CSS for fluid, dynamic interactions
 * **Forms & Validation:** SweetAlert2 for beautiful alerts and user feedback
 * **Utilities:** `pdf-lib` for client-side PDF resume compression
 
@@ -20,10 +20,15 @@ Designed for scalability, data integrity, and strict security.
 * **Runtime:** [Node.js](https://nodejs.org/)
 * **Framework:** [Express.js v5](https://expressjs.com/)
 * **Database ORM:** [Sequelize](https://sequelize.org/)
-* **Database Engine:** MySQL / TiDB Cloud (with `utf8mb4_bin` collation support for precise searching)
+* **Database Engine:** MySQL Database hosted on **TiDB Cloud** (with `utf8mb4_bin` collation support for precise searching)
 * **Authentication:** Stateless JSON Web Tokens (JWT) stored securely in `HttpOnly` cookies
 * **Validation:** [Zod](https://zod.dev/) for strict schema parsing and payload validation
 * **Security:** `bcryptjs` for password hashing, `cors` for cross-origin security
+
+### Cloud & Deployment
+* **Backend Hosting:** Deployed securely on **Render** (Express.js Node server)
+* **Database Hosting:** Cloud MySQL instances hosted on **TiDB Cloud**
+* **Frontend Hosting:**  Vercel
 
 ---
 
@@ -136,7 +141,7 @@ Ensure you have a MySQL or TiDB server running locally or externally.
 
 ## 💡 Engineering Decisions & Architecture
 
-1. **Client vs Server Components:** Leveraged Next.js 16 App Router heavily. Stateful components requiring animations (Framer Motion) or hooks were explicitly marked with `'use client'`, while layout files take advantage of server-side data fetching where applicable.
+1. **Client vs Server Components:** Leveraged Next.js 16 App Router heavily. Stateful components requiring client-side interactivity or hooks were explicitly marked with `'use client'`, while layout files take advantage of server-side data fetching where applicable.
 2. **HttpOnly Cookies for Auth:** Instead of localized `localStorage` JWTs, the system sets tokens as HTTP-only cookies securely handled by the backend, drastically reducing the Attack Surface regarding XSS.
 3. **Database Normalization:** Relational models between `Users`, `Companies`, `Jobs`, and `Applications` ensure strict referential integrity with cascading deletes (e.g. deleting a Job also clears its Applications).
 4. **Resilient Error Handling:** Global error catching on both Node.js (via Express middleware) and Next.js ensures the user is gracefully informed (e.g. via SweetAlert or native UI banners) rather than experiencing hard crashes.
